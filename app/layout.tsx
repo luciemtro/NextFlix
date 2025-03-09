@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Anton } from "next/font/google";
+import Nav from "@/components/Nav";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,7 +25,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" className={`${inter.variable} ${anton.variable}`}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <Nav />
+        {children}
+      </body>
     </html>
   );
 }
