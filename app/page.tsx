@@ -1,43 +1,73 @@
-// page.tsx
-// Ce composant de page affiche les films par genre en utilisant l'API TMDB.
-// Il affiche également les films tendances, populaires, en cours de diffusion, les mieux notés et à venir.
-
 "use client";
+
+// Ce composant de page affiche les films et séries par genre en utilisant l'API TMDB.
+// Il affiche également les tendances, les plus populaires, les mieux notés, etc.
 
 import { useState, useEffect } from "react";
 import { Genre } from "@/types/genre";
-import MoviesByGenre from "@/components/movies/movies-by-genre/MoviesByGenre";
+import MoviesByGenre from "@/components/movies/MoviesByGenre";
+import TvByGenre from "@/components/tv/TvByGenre";
 import Nav from "@/components/Nav";
-import TrendingMovies from "@/components/movies/trending/TrendingMovies";
-import PopularMovies from "@/components/movies/popular/PopularMovies";
-import NowPlayingMovies from "@/components/movies/now-playing/NowPlayingMovies";
-import TopRatedMovies from "@/components/movies/top-rated/TopRatedMovies";
-import UpcomingMovies from "@/components/movies/upcoming/UpcomingMovies";
+import TrendingMovies from "@/components/movies/TrendingMovies";
+import PopularMovies from "@/components/movies/PopularMovies";
+import NowPlayingMovies from "@/components/movies/NowPlayingMovies";
+import TopRatedMovies from "@/components/movies/TopRatedMovies";
+import UpcomingMovies from "@/components/movies/UpcomingMovies";
+import PopularTv from "@/components/tv/PopularTv";
+import TopRatedTv from "@/components/tv/TopRatedTv";
+import AiringToday from "@/components/tv/AiringToday";
+import OnTheAir from "@/components/tv/OnTheAir";
 
 export default function Home() {
-  const [genres, setGenres] = useState<Genre[]>([]);
-  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
+  const [movieGenres, setMovieGenres] = useState<Genre[]>([]);
+  const [tvGenres, setTvGenres] = useState<Genre[]>([]);
+  const [selectedMovieGenre, setSelectedMovieGenre] = useState<number | null>(
+    null
+  );
+  const [selectedTvGenre, setSelectedTvGenre] = useState<number | null>(null);
 
+  // Récupération des genres pour les films
   useEffect(() => {
-    const fetchGenres = async () => {
+    const fetchMovieGenres = async () => {
       try {
         const response = await fetch("/api/tmdb/movies/genres");
         const data = await response.json();
-        setGenres(data);
+        setMovieGenres(data);
       } catch (error) {
-        console.error("❌ Erreur API Genres:", error);
+        console.error("❌ Erreur API Genres Films:", error);
       }
     };
 
-    fetchGenres();
+    fetchMovieGenres();
+  }, []);
+
+  // Récupération des genres pour les séries TV
+  useEffect(() => {
+    const fetchTvGenres = async () => {
+      try {
+        const response = await fetch("/api/tmdb/tv/genres");
+        const data = await response.json();
+        setTvGenres(data);
+      } catch (error) {
+        console.error("❌ Erreur API Genres Séries TV:", error);
+      }
+    };
+
+    fetchTvGenres();
   }, []);
 
   return (
     <main>
-      <Nav onGenreSelect={setSelectedGenre} />{" "}
-      {selectedGenre ? (
-        genres
-          .filter((g) => g.id === selectedGenre)
+      {/* Barre de navigation avec sélection des genres */}
+      <Nav
+        onMovieGenreSelect={setSelectedMovieGenre}
+        onTvGenreSelect={setSelectedTvGenre}
+      />
+
+      {/* Affichage des films selon le genre sélectionné */}
+      {selectedMovieGenre ? (
+        movieGenres
+          .filter((g) => g.id === selectedMovieGenre)
           .map((genre) => <MoviesByGenre key={genre.id} genre={genre} />)
       ) : (
         <>
@@ -46,8 +76,25 @@ export default function Home() {
           <NowPlayingMovies />
           <TopRatedMovies />
           <UpcomingMovies />
-          {genres.map((genre) => (
+          {movieGenres.map((genre) => (
             <MoviesByGenre key={genre.id} genre={genre} />
+          ))}
+        </>
+      )}
+
+      {/* Affichage des séries TV selon le genre sélectionné */}
+      {selectedTvGenre ? (
+        tvGenres
+          .filter((g) => g.id === selectedTvGenre)
+          .map((genre) => <TvByGenre key={genre.id} genre={genre} />)
+      ) : (
+        <>
+          <PopularTv />
+          <TopRatedTv />
+          <AiringToday />
+          <OnTheAir />
+          {tvGenres.map((genre) => (
+            <TvByGenre key={genre.id} genre={genre} />
           ))}
         </>
       )}
