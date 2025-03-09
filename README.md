@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 NextFlix - Clone de Netflix avec TMDB
 
-## Getting Started
+[![NextFlix](https://img.shields.io/badge/Next.js-Framework-blue)](https://nextjs.org/)
+[![TMDB API](https://img.shields.io/badge/TMDB-API-green)](https://developer.themoviedb.org/docs)
 
-First, run the development server:
+🚀 **NextFlix** est une copie de **Netflix**, développée avec **Next.js** et utilisant **l'API The Movie Database (TMDB)** pour afficher des films, des séries et permettre aux utilisateurs de se connecter avec leur compte TMDB.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+🔗 **Démo en ligne** : [nextflix-luciemtro.vercel.app](https://nextflix-luciemtro.vercel.app)
+
+---
+
+## 🎯 **Fonctionnalités**
+✅ Interface inspirée de **Netflix** avec affichage des films et séries populaires.  
+✅ **Authentification via TMDB** avec `session_id`.  
+✅ **Ajout aux favoris** et **notation de films**.  
+✅ **Gestion des utilisateurs en temps réel** sans rechargement de page.  
+
+---
+
+## 📌 **Authentification avec TMDB**
+L'authentification utilise le système de **`session_id`** de TMDB pour permettre aux utilisateurs de gérer leurs favoris, noter des films et interagir avec leur compte TMDB.
+
+### 🔄 **Processus d'authentification**
+1️⃣ L'utilisateur clique sur **"Se connecter avec TMDB"**, ce qui génère un `request_token`.  
+2️⃣ Il est redirigé vers **TMDB pour autoriser l'accès**.  
+3️⃣ Une fois validé, TMDB renvoie un `request_token` qui est transformé en **`session_id`**.  
+4️⃣ **Le `session_id` est stocké dans `localStorage`** et permet d'afficher l'état de connexion **sans recharger la page**.  
+
+---
+
+## 🔑 **Utilisation de l'API TMDB**
+Une fois connecté, le **`session_id`** permet de faire des requêtes API personnalisées.
+
+### ➕ **Ajouter un film aux favoris**
+```ts
+await fetch(`https://api.themoviedb.org/3/account/{account_id}/favorite?api_key=${apiKey}&session_id=${sessionId}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ media_type: "movie", media_id: 550, favorite: true }),
+});
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### ⭐ **Noter un film**
+```ts
+await fetch(`https://api.themoviedb.org/3/movie/550/rating?api_key=${apiKey}&session_id=${sessionId}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ value: 8.5 }),
+});
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 📌 **Récupérer les films favoris**
+```ts
+await fetch(`https://api.themoviedb.org/3/account/{account_id}/favorite/movies?api_key=${apiKey}&session_id=${sessionId}`)
+});
+```
 
-## Learn More
+## 🎬 **Aperçu du Projet**
+🔗 **Voir la démo ici** : [NextFlix](https://nextflix-luciemtro.vercel.app)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📜 **Documentation**
+- 📘 **API TMDB** : [developer.themoviedb.org](https://developer.themoviedb.org/docs)  
+- 📘 **Next.js** : [nextjs.org/docs](https://nextjs.org/docs)  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🤝 **Contribuer**
+🎉 **Les PRs sont les bienvenues !**  
+Si tu veux proposer des améliorations ou corriger des bugs, **forke le repo et ouvre une pull request !** 🚀  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
