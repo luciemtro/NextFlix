@@ -28,7 +28,10 @@ export default function TopRatedMovies() {
         const data = await response.json();
         setMovies(data);
       } catch (error) {
-        console.error("Erreur lors de la récupération des films :", error);
+        console.error(
+          "Erreur lors de la récupération des films les mieux notés :",
+          error
+        );
       }
     };
 

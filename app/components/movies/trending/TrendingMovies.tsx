@@ -1,21 +1,21 @@
 "use client";
 
-// components/UpcomingMovies.tsx
-// Ce composant affiche une liste de films qui arrivent prochainement en utilisant l'API TMDB.
+// components/TrendingMovies.tsx
+// Ce composant affiche une liste de films les plus tendances de la semaine en utilisant l'API TMDB.
 
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import Image from "next/image";
 import { Movie } from "@/types/movie";
 
-export default function UpcomingMovies() {
+export default function TrendingMovies() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const { selectedLanguage } = useLanguage();
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch("/api/tmdb/movies/upcoming", {
+        const response = await fetch("/api/tmdb/movies/trending", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export default function UpcomingMovies() {
         setMovies(data);
       } catch (error) {
         console.error(
-          "Erreur lors de la récupération des films qui arrivent prochainement :",
+          "Erreur lors de la récupération des films tendances de la semaine :",
           error
         );
       }
@@ -40,7 +40,9 @@ export default function UpcomingMovies() {
 
   return (
     <div>
-      <h2 className="text-xl font-bold">Films qui arrivent prochainement</h2>
+      <h2 className="text-xl font-bold">
+        Films les plus populaire de la semaine
+      </h2>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {movies.map((movie) => (
           <div key={movie.id} className="bg-gray-800 p-2 rounded-lg">

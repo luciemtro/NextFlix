@@ -1,12 +1,15 @@
-import LoginButton from "@/components/loginButton";
-import LanguageSelector from "./LanguageSelector";
+"use client";
 
-export default function Nav() {
+import GenreSelector from "./GenreSelector";
+
+interface NavProps {
+  onGenreSelect: (genreId: number) => void; // ✅ Propriété requise
+}
+
+export default function Nav({ onGenreSelect }: NavProps) {
   return (
-    <div>
-      <h1>NextFlix</h1>
-      <LoginButton />
-      <LanguageSelector />
-    </div>
+    <nav>
+      <GenreSelector onSelect={onGenreSelect} />
+    </nav>
   );
 }

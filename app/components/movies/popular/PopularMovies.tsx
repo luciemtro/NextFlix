@@ -26,7 +26,10 @@ export default function PopularMovies() {
         const data = await response.json();
         setMovies(data);
       } catch (error) {
-        console.error("Erreur lors de la récupération des films :", error);
+        console.error(
+          "Erreur lors de la récupération des films les plus populaires :",
+          error
+        );
       }
     };
 
