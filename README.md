@@ -28,39 +28,6 @@ L'authentification utilise le système de **`session_id`** de TMDB pour permettr
 
 ---
 
-## 🔑 **Utilisation de l'API TMDB**
-Une fois connecté, le **`session_id`** permet de faire des requêtes API personnalisées.
-
-### ➕ **Ajouter un film aux favoris**
-```ts
-await fetch(`https://api.themoviedb.org/3/account/{account_id}/favorite?api_key=${apiKey}&session_id=${sessionId}`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ media_type: "movie", media_id: 550, favorite: true }),
-});
-```
-
-### ⭐ **Noter un film**
-```ts
-await fetch(`https://api.themoviedb.org/3/movie/550/rating?api_key=${apiKey}&session_id=${sessionId}`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ value: 8.5 }),
-});
-
-```
-
-### 📌 **Récupérer les films favoris**
-```ts
-await fetch(`https://api.themoviedb.org/3/account/{account_id}/favorite/movies?api_key=${apiKey}&session_id=${sessionId}`)
-});
-```
-
-## 🎬 **Aperçu du Projet**
-🔗 **Voir la démo ici** : [NextFlix](https://nextflix-luciemtro.vercel.app)
-
----
-
 ## 📜 **Documentation**
 - 📘 **API TMDB** : [developer.themoviedb.org](https://developer.themoviedb.org/docs)  
 - 📘 **Next.js** : [nextjs.org/docs](https://nextjs.org/docs)  
