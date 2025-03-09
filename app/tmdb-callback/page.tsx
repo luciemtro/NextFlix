@@ -1,5 +1,10 @@
 "use client";
 
+// tmdb-callback/page.tsx
+// Cette page gère le callback de l'authentification avec TMDB
+// Elle récupère le token de session et le stocke dans le localStorage
+// Elle redirige ensuite l'utilisateur vers la page d'accueil
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -21,24 +26,18 @@ export default function TMDBCallback() {
       }
 
       try {
-        const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-
-        // Demande le `session_id` à l'api TMDB, il faut créer un compte et être connecté sur TMDB pour que ça fonctionne
-        const response = await fetch(
-          `https://api.themoviedb.org/3/authentication/session/new?api_key=${apiKey}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ request_token: requestToken }),
-          }
-        );
+        const response = await fetch("/api/tmdb/auth/session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ request_token: requestToken }),
+        });
 
         const data = await response.json();
-        if (!data.success) {
+        if (!response.ok || !data.session_id) {
           throw new Error("Échec de la création de la session TMDB");
         }
+
         localStorage.setItem("tmdb_session_id", data.session_id);
-        // Déclenche un event pour informer React que l'auth a changé sinon le bouton de connexion ne se mettra pas à jour
         window.dispatchEvent(new Event("tmdb-login"));
         router.push("/");
       } catch (err: unknown) {
@@ -60,7 +59,7 @@ export default function TMDBCallback() {
       {loading ? (
         <p>Connexion en cours...</p>
       ) : error ? (
-        <p>Erreur: {error}</p>
+        <p className="text-red-500">Erreur: {error}</p>
       ) : null}
     </div>
   );

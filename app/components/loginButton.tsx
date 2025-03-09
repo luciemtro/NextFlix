@@ -1,5 +1,10 @@
 "use client";
 
+// components/loginButton.tsx
+// Composant qui gère la connexion/déconnexion avec TMDB
+// Ce composant affiche un bouton de connexion qui redirige vers TMDB
+// Lorsque l'utilisateur est connecté, le bouton affiche "Se déconnecter" et permet de se déconnecter de TMDB
+
 import { useEffect, useState } from "react";
 import { redirectToTMDBAuth } from "@/lib/tmdbAuth";
 

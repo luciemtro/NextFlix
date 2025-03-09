@@ -1,3 +1,4 @@
+import { LanguageProvider } from "@/context/LanguageContext";
 import type { Metadata } from "next";
 import { Inter, Anton } from "next/font/google";
 import Nav from "@/components/Nav";
@@ -26,8 +27,10 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${anton.variable}`}>
       <body className="antialiased">
-        <Nav />
-        {children}
+        <LanguageProvider>
+          <Nav />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

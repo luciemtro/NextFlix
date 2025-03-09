@@ -1,3 +1,9 @@
+import PopularMovies from "./components/movies/popular/PopularMovies";
+
 export default function Home() {
-  return <main></main>;
+  return (
+    <main>
+      <PopularMovies />
+    </main>
+  );
 }
