@@ -1,4 +1,4 @@
-// page.tsx (HOMEPAGE)
+// page.tsx
 // Ce composant de page affiche les films par genre en utilisant l'API TMDB.
 // Il affiche également les films tendances, populaires, en cours de diffusion, les mieux notés et à venir.
 
