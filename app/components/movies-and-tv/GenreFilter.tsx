@@ -1,15 +1,16 @@
+// Components/movies-and-tv/GenreFilter.tsx
+
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Genre } from "@/types/genre";
 
-export default function GenreSelector({
-  onSelect,
-}: {
-  onSelect: (genreId: number) => void;
-}) {
+interface GenreFilterProps {
+  onGenreSelect: (genreId: number | null) => void;
+}
+
+export default function GenreFilter({ onGenreSelect }: GenreFilterProps) {
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -18,7 +19,7 @@ export default function GenreSelector({
         const data = await response.json();
         setGenres(data);
       } catch (error) {
-        console.error("Erreur API:", error);
+        console.error("❌ Erreur API Genres :", error);
       }
     };
 
@@ -27,14 +28,12 @@ export default function GenreSelector({
 
   return (
     <div className="mb-4">
+      <label className="text-lg font-bold">🎭 Filtrer par Genre :</label>
       <select
-        value={selectedGenre || ""}
-        onChange={(e) => {
-          const genreId = Number(e.target.value);
-          setSelectedGenre(genreId);
-          onSelect(genreId);
-        }}
-        className="p-2 border rounded"
+        onChange={(e) =>
+          onGenreSelect(e.target.value ? Number(e.target.value) : null)
+        }
+        className="bg-gray-800 text-white p-2 rounded-md w-full mt-2"
       >
         <option value="">Tous les genres</option>
         {genres.map((genre) => (

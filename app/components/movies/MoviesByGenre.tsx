@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import Image from "next/image";
-import { Movie } from "@/types/movie";
+import { Movie } from "@/types/media";
 import { Genre } from "@/types/genre";
 
 interface MoviesByGenreProps {
@@ -17,12 +17,13 @@ export default function MoviesByGenre({ genre }: MoviesByGenreProps) {
   useEffect(() => {
     const fetchMoviesByGenre = async () => {
       try {
-        const response = await fetch("/api/tmdb/movies/by-genre", {
+        const response = await fetch("/api/tmdb/by-genre", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             language: selectedLanguage,
             genreId: genre.id,
+            type: "movie",
           }),
         });
 
@@ -47,7 +48,7 @@ export default function MoviesByGenre({ genre }: MoviesByGenreProps) {
             <div key={movie.id} className="bg-gray-800 p-2 rounded-lg">
               <Image
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
+                alt={movie.title || "Image de la série TV"}
                 width={200}
                 height={300}
                 className="w-full rounded-md"

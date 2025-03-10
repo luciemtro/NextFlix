@@ -22,16 +22,12 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log(`📡 Requête TMDB pour les films trending en ${language}...`);
-
     const response = await fetch(
       `https://api.themoviedb.org/3/trending/movie/week?language=${language}`,
       {
         headers: { Authorization: `Bearer ${TMDB_ACCESS_TOKEN}` },
       }
     );
-
-    console.log("📡 Réponse TMDB:", response.status, response.statusText);
 
     if (!response.ok) {
       const errorMessage = await response.text();

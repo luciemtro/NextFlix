@@ -1,36 +1,26 @@
 "use client";
-
-// Ce composant de page affiche les films et séries par genre en utilisant l'API TMDB.
-// Il affiche également les tendances, les plus populaires, les mieux notés, etc.
+// Homepage
+// Ce composant affiche les films et séries par genre, ainsi que les tendances et nouveautés mélangées.
 
 import { useState, useEffect } from "react";
 import { Genre } from "@/types/genre";
+import GenreFilter from "@/components/movies-and-tv/GenreFilter";
+import FilteredContent from "@/components/movies-and-tv/FilteredContent";
+import MixedCategory from "@/components/movies-and-tv/MixedCategory";
 import MoviesByGenre from "@/components/movies/MoviesByGenre";
 import TvByGenre from "@/components/tv/TvByGenre";
-import Nav from "@/components/Nav";
-import TrendingMovies from "@/components/movies/TrendingMovies";
-import PopularMovies from "@/components/movies/PopularMovies";
-import NowPlayingMovies from "@/components/movies/NowPlayingMovies";
-import TopRatedMovies from "@/components/movies/TopRatedMovies";
-import UpcomingMovies from "@/components/movies/UpcomingMovies";
-import PopularTv from "@/components/tv/PopularTv";
-import TopRatedTv from "@/components/tv/TopRatedTv";
-import AiringToday from "@/components/tv/AiringToday";
-import OnTheAir from "@/components/tv/OnTheAir";
 
 export default function Home() {
   const [movieGenres, setMovieGenres] = useState<Genre[]>([]);
   const [tvGenres, setTvGenres] = useState<Genre[]>([]);
-  const [selectedMovieGenre, setSelectedMovieGenre] = useState<number | null>(
-    null
-  );
-  const [selectedTvGenre, setSelectedTvGenre] = useState<number | null>(null);
+  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
 
   // Récupération des genres pour les films
   useEffect(() => {
     const fetchMovieGenres = async () => {
       try {
         const response = await fetch("/api/tmdb/movies/genres");
+        if (!response.ok) throw new Error("Erreur API Films");
         const data = await response.json();
         setMovieGenres(data);
       } catch (error) {
@@ -46,6 +36,7 @@ export default function Home() {
     const fetchTvGenres = async () => {
       try {
         const response = await fetch("/api/tmdb/tv/genres");
+        if (!response.ok) throw new Error("Erreur API Séries");
         const data = await response.json();
         setTvGenres(data);
       } catch (error) {
@@ -57,42 +48,34 @@ export default function Home() {
   }, []);
 
   return (
-    <main>
-      {/* Barre de navigation avec sélection des genres */}
-      <Nav
-        onMovieGenreSelect={setSelectedMovieGenre}
-        onTvGenreSelect={setSelectedTvGenre}
-      />
+    <main className="p-4">
+      {/* 🎭 Filtre unique par genre (Netflix-like) */}
+      <GenreFilter onGenreSelect={setSelectedGenre} />
+      {selectedGenre && <FilteredContent genreId={selectedGenre} />}
 
-      {/* Affichage des films selon le genre sélectionné */}
-      {selectedMovieGenre ? (
-        movieGenres
-          .filter((g) => g.id === selectedMovieGenre)
-          .map((genre) => <MoviesByGenre key={genre.id} genre={genre} />)
-      ) : (
+      {/* 🔥 Sections mixtes (Tendances, Mieux notés, Nouveautés) */}
+      {!selectedGenre && (
         <>
-          <TrendingMovies />
-          <PopularMovies />
-          <NowPlayingMovies />
-          <TopRatedMovies />
-          <UpcomingMovies />
+          <MixedCategory
+            title="🔥 Tendances"
+            movieEndpoint="/api/tmdb/movies/popular"
+            tvEndpoint="/api/tmdb/tv/popular"
+          />
+          <MixedCategory
+            title="🌟 Les mieux notés"
+            movieEndpoint="/api/tmdb/movies/top-rated"
+            tvEndpoint="/api/tmdb/tv/top-rated"
+          />
+          <MixedCategory
+            title="🚀 Nouveautés"
+            movieEndpoint="/api/tmdb/movies/upcoming"
+            tvEndpoint="/api/tmdb/tv/on-the-air"
+          />
+
+          {/* 🎬 Films et séries par genre (affichage dynamique) */}
           {movieGenres.map((genre) => (
             <MoviesByGenre key={genre.id} genre={genre} />
           ))}
-        </>
-      )}
-
-      {/* Affichage des séries TV selon le genre sélectionné */}
-      {selectedTvGenre ? (
-        tvGenres
-          .filter((g) => g.id === selectedTvGenre)
-          .map((genre) => <TvByGenre key={genre.id} genre={genre} />)
-      ) : (
-        <>
-          <PopularTv />
-          <TopRatedTv />
-          <AiringToday />
-          <OnTheAir />
           {tvGenres.map((genre) => (
             <TvByGenre key={genre.id} genre={genre} />
           ))}

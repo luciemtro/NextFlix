@@ -13,16 +13,12 @@ export async function GET() {
       return NextResponse.json({ error: "Clé API absente" }, { status: 500 });
     }
 
-    console.log("📡 Récupération des genres depuis TMDB...");
-
     const response = await fetch(
       `https://api.themoviedb.org/3/genre/movie/list?language=fr-FR`,
       {
         headers: { Authorization: `Bearer ${TMDB_ACCESS_TOKEN}` },
       }
     );
-
-    console.log("📡 Réponse TMDB:", response.status, response.statusText);
 
     if (!response.ok) {
       return NextResponse.json(
