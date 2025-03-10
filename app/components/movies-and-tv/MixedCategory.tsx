@@ -1,10 +1,8 @@
-// components/movies-and-tv/MixedCategory.tsx
-// Compare this snippet from app/components/movies-and-tv/GenreFilter.tsx:
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link"; // Ajout pour la navigation
 import { Movie, TvShow } from "@/types/media";
 
 interface MixedCategoryProps {
@@ -62,7 +60,15 @@ export default function MixedCategory({
       <h2 className="text-xl font-bold">{title}</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {content.map((item) => (
-          <div key={item.id} className="bg-gray-800 p-2 rounded-lg">
+          <Link
+            key={item.id}
+            href={
+              "title" in item
+                ? `components/movies/${item.id}`
+                : `components/tv/${item.id}`
+            } // Redirige vers la bonne page
+            className="bg-gray-800 p-2 rounded-lg block"
+          >
             <Image
               src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
               alt={"title" in item ? item.title : item.name}
@@ -73,7 +79,7 @@ export default function MixedCategory({
             <h3 className="text-sm mt-2">
               {"title" in item ? item.title : item.name}
             </h3>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

@@ -8,6 +8,11 @@ export interface Movie {
   poster_path: string;
   overview: string;
   release_date: string;
+  backdrop_path: string;
+  vote_average: number;
+  videos?: {
+    results: { key: string; type: string; site: string; official: boolean }[];
+  };
 }
 
 // types/tv.ts
@@ -19,4 +24,7 @@ export interface TvShow {
   overview: string;
   vote_average: number;
   first_air_date: string;
+  videos?: {
+    results: { key: string; type: string; site: string; official: boolean }[];
+  };
 }
