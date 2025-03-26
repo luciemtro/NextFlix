@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  turbo: false, // Désactive Turbopack
 };
 
 export default nextConfig;
